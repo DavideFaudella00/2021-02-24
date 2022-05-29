@@ -36,41 +36,57 @@ public class Model {
 		for (Adiacenza a : dao.getAdiacenze(m, idMap)) {
 			if (a.getPeso() >= 0) {
 				Graphs.addEdge(grafo, a.getP1().getP1(), a.getP2().getP1(), a.getPeso());
-			} 
-				else {
+			} else {
 				Graphs.addEdge(grafo, a.getP2().getP1(), a.getP1().getP1(), -a.getPeso());
 			}
 		}
-		
+
 	}
-	
+
+	private Player best = null;
+
 	public String getGiocatore() {
 		String result = "";
 		double r = 0;
 		double max = 0;
-		Player best = null;
-		
-		for(Player p: grafo.vertexSet()) {
+
+		for (Player p : grafo.vertexSet()) {
 			r = 0;
-			for(Player o: Graphs.neighborListOf(grafo, p)) {
+			for (Player o : Graphs.neighborListOf(grafo, p)) {
 				DefaultWeightedEdge d = grafo.getEdge(p, o);
-				if(d != null) {
+				if (d != null) {
 					r += grafo.getEdgeWeight(d);
 				}
 				DefaultWeightedEdge d1 = grafo.getEdge(o, p);
-				if(d1 != null) {
+				if (d1 != null) {
 					System.out.println("peso: " + grafo.getEdgeWeight(d1));
 					r -= grafo.getEdgeWeight(d1);
 				}
 			}
-			if(r > max) {
+			if (r > max) {
 				max = r;
 				best = p;
 			}
 		}
 		result = best.getPlayerID() + " - " + best.getName() + ", " + max;
-		
+
 		return result;
+	}
+
+	public Player getBest() {
+		return best;
+	}
+
+	private Simulator sim;
+
+	public void init(int numero) {
+		sim = new Simulator();
+		sim.init(numero);
+	}
+
+	public String simula() {
+		String s = sim.run();
+		return s;
 	}
 
 }
